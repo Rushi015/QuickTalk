@@ -12,7 +12,7 @@ app.use(cors());// socket io comes with many issus to resolve it
 const server = http.createServer(app);
 const io = new Server(server,{
     cors: {
-        origin :  "http://localhost:5173", //it is ok to connect with this port
+        origin :  "https://quick-talk-client-sandy.vercel.app/", //it is ok to connect with this port
         methods:["GET","POST"]
     },
 });
