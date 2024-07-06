@@ -4,7 +4,7 @@ import './App.css';
 import io from 'socket.io-client'
 import Chat from './Chat';
 
-const socket = io.connect("https://quick-talk-server.vercel.app/")
+const socket = io.connect("http://localhost:3000")
 
 function App() {
 

@@ -1,41 +1,58 @@
-const express = require('express')  //creating a variable
-
-const app = express();//creating instance
-const http = require("http");//to build server    
+const express = require('express');  // Creating a variable
+const app = express();  // Creating instance
+const http = require("http");  // To build server    
 const cors = require("cors");
-const{Server}= require("socket.io")  //server exists in socket
+const { Server } = require("socket.io");  // Server exists in socket
+const path = require("path");
+const dotenv = require("dotenv");
 
-app.use(cors());// socket io comes with many issus to resolve it
+// Load environment variables
+dotenv.config()
 
+app.use(cors());  // Socket.io comes with many issues, to resolve it
 
+const __dirname1 = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, '/chat-app/dist')));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, 'chat-app', 'dist', 'index.html'))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+    console.log(process.env.NODE_ENV)
+
+  });
+}
 
 const server = http.createServer(app);
-const io = new Server(server,{
-    cors: {
-        origin :  "https://quick-talk-client-sandy.vercel.app/", //it is ok to connect with this port
-        methods:["GET","POST"]
-    },
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",  // It is ok to connect with this port
+    methods: ["GET", "POST"]
+  },
 });
 
+io.on("connection", (socket) => {
+  console.log(`User connected ${socket.id}`);
 
-io.on("connection",(socket)=>{
-console.log(`User connected ${socket.id}`)
-
-
-socket.on("join_room",(data)=>{   //data will ne name and roomid
+  socket.on("join_room", (data) => {  // Data will be name and room ID
     socket.join(data);
-    console.log(`User with ID: ${socket.id} joined room : ${data}`)
-})
+    console.log(`User with ID: ${socket.id} joined room: ${data}`);
+  });
 
-socket.on("send_message",(data)=>{
-    socket.to(data.room).emit("receive_message",data)
-   console.log(data)
+  socket.on("send_message", (data) => {
+    socket.to(data.room).emit("receive_message", data);
+    console.log(data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected", socket.id);
+  });
 });
 
-socket.on("disconnect",()=>{
-console.log("user disconnected",socket.id)
-})
-})   //socket is based on events and this is telling that  means we are listening to connections
-server.listen(3000,()=>{
-    console.log('server running')
-})
+server.listen(3000, () => {
+  console.log('Server running on port 3000');
+});
