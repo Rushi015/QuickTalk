@@ -13,7 +13,7 @@ app.use(cors());  // Socket.io comes with many issues, to resolve it
 
 const __dirname1 = path.resolve();
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname1, '/chat-app/dist')));
 
   app.get("*", (req, res) =>
