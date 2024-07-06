@@ -8,7 +8,7 @@ import Chat from './Chat';
 
 const socket = io("http://localhost:3000", {
   path:'/socket',
-  transports: ['websocket'], 
+  transports: ['websocket','polling'], 
   withCredentials: true 
 });
 
