@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js",
-    "build":  "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix chat-app && npx --prefix chat-app vite build"
+    "build":  "npm install --legacy-peer-deps --production=false && npm install --legacy-peer-deps --production=false --prefix chat-app && npm run build --prefix chat-app"
   },
   "author": "",
   "license": "ISC",
